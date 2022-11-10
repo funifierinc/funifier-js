@@ -15,8 +15,10 @@
     "type": "git",
     "url": "https://github.com/funifierinc/funifier-js.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "funifier.js"
+  ],
+  "author": "Funifier",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/funifierinc/funifier-js/issues"
