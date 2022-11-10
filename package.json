@@ -59,7 +59,7 @@
     "eslint-plugin-tsdoc": "^0.2.17"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   },
   "release": {
     "branches": [
