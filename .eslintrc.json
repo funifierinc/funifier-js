@@ -20,8 +20,9 @@
   "plugins": [
     "@typescript-eslint",
     "eslint-plugin-import-helpers",
-    "prettier",
-    "unused-imports"
+    "eslint-plugin-tsdoc",
+    "unused-imports",
+    "prettier"
   ],
   "rules": {
     "prettier/prettier": [
@@ -30,6 +31,7 @@
         "endOfLine": "auto"
       }
     ],
+    "tsdoc/syntax": "warn",
     "no-unused-vars": "off",
     "import/extensions": [
       "error",

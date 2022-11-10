@@ -1,4 +1,4 @@
-import { Funifier } from '..';
+import { Funifier } from '../funifier';
 import { Auth } from './auth';
 
 describe('Auth', () => {
