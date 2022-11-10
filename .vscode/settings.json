@@ -3,6 +3,7 @@
     "airbnb",
     "commitlint",
     "funifier",
+    "GITHUB",
     "Parens",
     "tsdoc"
   ]
