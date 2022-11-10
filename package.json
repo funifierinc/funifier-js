@@ -9,7 +9,7 @@
     "prepare": "husky install",
     "docs": "typedoc --out docs src/index.ts --exclude \"**/*+(.spec|.e2e|.type).ts\"",
     "docs:watch": "typedoc --out docs src/index.ts --exclude \"**/*+(.spec|.e2e|.type).ts\" --watch",
-    "semantic-release": "semantic-release --branch main"
+    "semantic-release": "semantic-release"
   },
   "repository": {
     "type": "git",
@@ -58,5 +58,10 @@
   },
   "publishConfig": {
     "access": "restricted"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ]
   }
 }
