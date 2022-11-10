@@ -1,10 +1,18 @@
-import { Funifier } from '..';
-import { AuthProps, BasicProps, PasswordProps } from '../types/auth/auth';
-import { Token } from '../types/auth/token';
+import { Funifier } from '../funifier';
+import { AuthProps, BasicProps, PasswordProps } from '../types/auth/auth.type';
+import { Token } from '../types/auth/token.type';
 
+/**
+ * Authentication class.
+ * It is used to authenticate with the Funifier API.
+ */
 export class Auth {
   private funifierInstance: Funifier;
 
+  /**
+   * Get the singleton instance of the Auth class.
+   * @param funifierInstance The Funifier instance.
+   */
   constructor({ funifierInstance }: AuthProps) {
     if (!funifierInstance) {
       throw new Error('Funifier instance is required');
@@ -13,10 +21,35 @@ export class Auth {
     this.funifierInstance = funifierInstance;
   }
 
+  /**
+   * Get the Funifier instance.
+   * @returns The Funifier instance.
+   * @example
+   * ```typescript
+   * const funifierInstance = auth.getFunifierInstance();
+   * ```
+   * @see {@link Funifier}
+   * @see {@link Funifier.instance}
+   */
   static authenticate({ funifierInstance }: AuthProps) {
     return new Auth({ funifierInstance });
   }
 
+  /**
+   * Authenticate with the Funifier API using the basic authentication method.
+   * @param client_secret The client secret.
+   * @returns The token.
+   * @example
+   * ```typescript
+   * import { Funifier } from '..';
+   * import { Auth } from './auth';
+   *
+   * const token = Auth.authenticate({ funifierInstance }).basic({
+   *   client_secret: '456',
+   * });
+   * ```
+   * @see {@link Token}
+   */
   basic({ client_secret }: BasicProps) {
     const token = `Basic ${Buffer.from(
       `${this.funifierInstance.getConfig().api_key}:${client_secret}`,
@@ -27,6 +60,22 @@ export class Auth {
     return token;
   }
 
+  /**
+   * Authenticate with the Funifier API using the password authentication method.
+   * @param username The username.
+   * @param password The password.
+   * @returns The token.
+   * @example
+   * ```typescript
+   * import { Funifier } from '..';
+   * import { Auth } from './auth';
+   *
+   * const username = 'john.doe';
+   * const password = '123456';
+   * const token = await Auth.authenticate({ funifierInstance }).password({ username, password });
+   * ```
+   * @see {@link Token}
+   */
   async password({ username, password }: PasswordProps) {
     const payload = {
       apiKey: this.funifierInstance.getConfig().api_key,
