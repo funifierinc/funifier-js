@@ -1,6 +1,6 @@
 {
   "name": "funifier-js",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,11 +8,12 @@
     "test": "jest",
     "prepare": "husky install",
     "docs": "typedoc --out docs src/index.ts --exclude \"**/*+(.spec|.e2e|.type).ts\"",
-    "docs:watch": "typedoc --out docs src/index.ts --exclude \"**/*+(.spec|.e2e|.type).ts\" --watch"
+    "docs:watch": "typedoc --out docs src/index.ts --exclude \"**/*+(.spec|.e2e|.type).ts\" --watch",
+    "semantic-release": "semantic-release --branch main"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/funifierinc/funifier-js.git"
+    "url": "https://github.com/funifierinc/funifier-js.git"
   },
   "keywords": [],
   "author": "",
@@ -44,7 +45,8 @@
     "jest": "^29.2.2",
     "prettier": "^2.7.1",
     "ts-node": "^10.9.1",
-    "typedoc": "^0.23.20"
+    "typedoc": "^0.23.20",
+    "semantic-release": "^19.0.5"
   },
   "config": {
     "commitizen": {
@@ -53,5 +55,8 @@
   },
   "dependencies": {
     "eslint-plugin-tsdoc": "^0.2.17"
+  },
+  "publishConfig": {
+    "access": "restricted"
   }
 }
