@@ -1,5 +1,5 @@
 {
-  "name": "@funifier/funifier-js",
+  "name": "funifier-js",
   "version": "0.0.0-development",
   "description": "",
   "main": "dist/index.js",
@@ -20,7 +20,7 @@
     "funifier.js"
   ],
   "author": "Funifier",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/funifierinc/funifier-js/issues"
   },
