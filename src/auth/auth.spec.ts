@@ -4,7 +4,7 @@ import { Auth } from './auth';
 describe('Auth', () => {
   const service = 'https://url-service.funifier.com';
   const api_key = 'apiKey';
-  const funifierInstance = Funifier.instance({ service, api_key });
+  Funifier.init({ service, api_key });
   const username = 'player';
   const password = 'password';
 
@@ -17,15 +17,21 @@ describe('Auth', () => {
     );
   }
 
+  beforeEach(() => {
+    Funifier.init({ service, api_key });
+  });
+
   describe('Basic', () => {
     it('should throw an error if funifierInstance is not provided', () => {
-      expect(() => Auth.authenticate({} as any)).toThrowError(
-        'Funifier instance is required',
-      );
+      Funifier.destroy();
+
+      expect(() =>
+        Auth.authenticate().basic({ client_secret: 'secret' }),
+      ).toThrow(new Error('Funifier is not initialized'));
     });
 
     it('should authenticate with a basic authentication method', () => {
-      const token = Auth.authenticate({ funifierInstance }).basic({
+      const token = Auth.authenticate().basic({
         client_secret: '456',
       });
 
@@ -33,11 +39,11 @@ describe('Auth', () => {
     });
 
     it('should set the basic token in the funifier instance', () => {
-      const token = Auth.authenticate({ funifierInstance }).basic({
+      const token = Auth.authenticate().basic({
         client_secret: '456',
       });
 
-      const basicToken = funifierInstance.getBasicToken();
+      const basicToken = Funifier.shared.getBasicToken();
 
       expect(basicToken).toBe(token);
     });
@@ -51,7 +57,7 @@ describe('Auth', () => {
         expires_in: 123412341234,
       });
 
-      const token = await Auth.authenticate({ funifierInstance }).password({
+      const token = await Auth.authenticate().password({
         username,
         password,
       });
@@ -69,7 +75,7 @@ describe('Auth', () => {
       });
 
       try {
-        await Auth.authenticate({ funifierInstance }).password({
+        await Auth.authenticate().password({
           username: '-null-',
           password: '-null-',
         });
@@ -78,22 +84,36 @@ describe('Auth', () => {
       }
     });
 
-    it('should not authenticate with invalid api_key using password authentication method', async () => {
+    it('should set the Bearer token in the funifier instance', async () => {
       mockedFetch({
-        message:
-          'api_key invalid, verify your game api_key in studio.funifier.com',
+        access_token: '123',
+        token_type: 'Bearer',
+        expires_in: 123412341234,
+      });
+
+      const token = await Auth.authenticate().password({
+        username,
+        password,
+      });
+
+      const bearerToken = Funifier.shared.getBearerToken();
+
+      expect(bearerToken).toBe(`Bearer ${token.access_token}`);
+    });
+
+    it('should throw an error if api_key is invalid', async () => {
+      Funifier.destroy();
+
+      Funifier.init({ service, api_key: 'invalid' });
+
+      mockedFetch({
+        message: 'api_key invalid',
         statusCode: 500,
         data: null,
       });
 
       try {
-        const tmpFunifierInstance = Funifier.instance({
-          service,
-          api_key: '-null-',
-        });
-        await Auth.authenticate({
-          funifierInstance: tmpFunifierInstance,
-        }).password({
+        await Auth.authenticate().password({
           username,
           password,
         });
@@ -102,21 +122,21 @@ describe('Auth', () => {
       }
     });
 
-    it('should set the token in the funifier instance', async () => {
+    it('should to throw an error if message is unknown error', async () => {
       mockedFetch({
-        access_token: '123',
-        token_type: 'Bearer',
-        expires_in: 123412341234,
+        message: 'unknown error',
+        statusCode: 500,
+        data: null,
       });
 
-      const token = await Auth.authenticate({ funifierInstance }).password({
-        username,
-        password,
-      });
-
-      const bearerToken = funifierInstance.getToken();
-
-      expect(bearerToken).toBe(`Bearer ${token.access_token}`);
+      try {
+        await Auth.authenticate().password({
+          username,
+          password,
+        });
+      } catch (error: any) {
+        expect(error?.message).toBe('unknown error');
+      }
     });
   });
 });

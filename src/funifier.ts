@@ -11,6 +11,9 @@ type ConfigProps = {
   api_key: string;
 };
 
+export type StringBasic = `Basic ${string}`;
+export type StringBearer = `Bearer ${string}`;
+
 /**
  * The Funifier class is the main class of the SDK.
  * It is used to create an instance of the SDK and to set the configuration.
@@ -21,12 +24,12 @@ type ConfigProps = {
  * });
  */
 export class Funifier {
-  private static INSTANCE: Funifier;
+  private static INSTANCE: Funifier | null;
 
   private service: string;
   private api_key: string;
-  private bearerToken: string | null = null;
-  private basicToken: string | null = null;
+  private bearerToken: StringBearer | null = null;
+  private basicToken: StringBasic | null = null;
 
   private constructor({ service, api_key }: ConfigProps) {
     this.service = service;
@@ -34,20 +37,48 @@ export class Funifier {
   }
 
   /**
-   * Get the singleton instance of the Funifier class.
-   * @param config The configuration object.
-   * @returns The singleton instance of the Funifier class.
+   * Initialize the funifier instance.
+   * @returns The funifier instance.
    * @example
    * ```typescript
-   * const funifier = Funifier.getInstance({
-   *  service: "https://service2.funifier.com",
-   *  api_key: "636d164af1c2641b440dfde9",
+   * const funifierInstance = Funifier.instance({
+   * service: "https://service2.funifier.com",
+   * api_key: "636d164af1c2641b440dfde9"
    * });
    * ```
    */
-  public static instance({ service, api_key }: ConfigProps) {
+  public static init({ service, api_key }: ConfigProps) {
+    if (!service) throw new Error('Service is required');
+    if (!api_key) throw new Error('Api key is required');
+
     if (!Funifier.INSTANCE) {
       Funifier.INSTANCE = new Funifier({ service, api_key });
+    }
+
+    return Funifier.INSTANCE;
+  }
+
+  public static destroy() {
+    Funifier.INSTANCE = null;
+  }
+
+  /**
+   * Get the the funifier instance. If the instance is not initialized, it will throw an error.
+   * @returns The funifier instance.
+   * @example
+   * ```typescript
+   * const funifierInstance = Funifier.instance({
+   * service: "https://service2.funifier.com",
+   * api_key: "636d164af1c2641b440dfde9"
+   * });
+   *
+   * const funifierInstance = Funifier.shared.getConfig();
+   * ```
+   * @see {@link Funifier.init}
+   */
+  public static get shared() {
+    if (!Funifier.INSTANCE) {
+      throw new Error('Funifier is not initialized');
     }
 
     return Funifier.INSTANCE;
@@ -72,8 +103,11 @@ export class Funifier {
    * Set the token in the funifier instance.
    * @returns void
    */
-  public setToken(token: string) {
-    this.bearerToken = token;
+  public setBearerToken(token: string) {
+    if (!token.match(/^Bearer\s.*/g)) {
+      throw new Error('Invalid Bearer token');
+    }
+    this.bearerToken = token as StringBearer;
   }
 
   /**
@@ -84,7 +118,7 @@ export class Funifier {
    * const token = funifier.getToken();
    * ```
    */
-  public getToken() {
+  public getBearerToken() {
     return this.bearerToken;
   }
 
@@ -93,7 +127,10 @@ export class Funifier {
    * @returns void
    */
   public setBasicToken(token: string) {
-    this.basicToken = token;
+    if (!token.match(/^Basic\s.*/g)) {
+      throw new Error('Invalid Basic token');
+    }
+    this.basicToken = token as StringBasic;
   }
 
   /**
