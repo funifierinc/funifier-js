@@ -72,7 +72,7 @@ export class Funifier {
    * api_key: "636d164af1c2641b440dfde9"
    * });
    *
-   * const funifierInstance = Funifier.shared.getConfig();
+   * const funifierInstance = Funifier.shared;
    * ```
    * @see {@link Funifier.init}
    */
