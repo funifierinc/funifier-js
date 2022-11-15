@@ -1,4 +1,4 @@
-export interface Token {
+export type Token = {
   /**
    * The token
    */
@@ -13,4 +13,11 @@ export interface Token {
    * @example 1590000000
    */
   expires_in: number;
-}
+
+  /**
+   * If the are a error, this will be the error message
+   * @example player or password incorrect
+   * @example api_key invalid
+   */
+  message?: string;
+};
