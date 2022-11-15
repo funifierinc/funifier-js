@@ -18,7 +18,7 @@ export type StringBearer = `Bearer ${string}`;
  * The Funifier class is the main class of the SDK.
  * It is used to create an instance of the SDK and to set the configuration.
  * @example
- * const funifierInstance = Funifier.instance({
+ * const funifierInstance = Funifier.init({
  *  service: "https://service2.funifier.com",
  *  api_key: "636d164af1c2641b440dfde9"
  * });
@@ -41,7 +41,7 @@ export class Funifier {
    * @returns The funifier instance.
    * @example
    * ```typescript
-   * const funifierInstance = Funifier.instance({
+   * const funifierInstance = Funifier.init({
    * service: "https://service2.funifier.com",
    * api_key: "636d164af1c2641b440dfde9"
    * });
@@ -58,6 +58,14 @@ export class Funifier {
     return Funifier.INSTANCE;
   }
 
+  /**
+   * Destroy the funifier instance.
+   * @returns void
+   * @example
+   * ```typescript
+   * Funifier.destroy();
+   * ```
+   */
   public static destroy() {
     Funifier.INSTANCE = null;
   }
