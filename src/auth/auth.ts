@@ -1,4 +1,6 @@
 import { Funifier } from '../funifier';
+import { FetchAdapter } from '../httpClient/fetchAdapter';
+import { HttpClient } from '../httpClient/httpClient';
 import { BasicProps, PasswordProps } from '../types/auth/auth.type';
 import { Token } from '../types/auth/token.type';
 
@@ -7,8 +9,10 @@ import { Token } from '../types/auth/token.type';
  * It is used to authenticate with the Funifier API.
  */
 export class Auth {
+  constructor(private readonly httpClient: HttpClient) {}
+
   static authenticate() {
-    return new Auth();
+    return new Auth(new FetchAdapter());
   }
 
   /**
@@ -60,36 +64,27 @@ export class Auth {
       password,
     };
 
-    const response = await fetch(
-      `${Funifier.shared.getConfig().service}/v3/auth/token`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-          'Cache-Control': 'no-cache',
-        },
-        body: JSON.stringify(payload),
+    const response = await this.httpClient.post<Token>(`/v3/auth/token`, {
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Cache-Control': 'no-cache',
       },
-    );
+      data: payload,
+    });
 
-    const responseParsed = await response.json();
-
-    if (responseParsed.access_token) {
-      const bearerToken = `Bearer ${responseParsed.access_token}`;
+    if (response.access_token) {
+      const bearerToken = `Bearer ${response.access_token}`;
 
       Funifier.shared.setBearerToken(bearerToken);
 
-      return responseParsed as Token;
+      return response;
     }
 
-    if (
-      responseParsed &&
-      responseParsed.message === 'password incorrect for player'
-    ) {
+    if (response && response.message === 'password incorrect for player') {
       throw new Error('player or password incorrect');
     }
 
-    if (responseParsed && responseParsed.message.includes('api_key invalid')) {
+    if (response && response.message?.includes('api_key invalid')) {
       throw new Error('api_key invalid');
     }
 
