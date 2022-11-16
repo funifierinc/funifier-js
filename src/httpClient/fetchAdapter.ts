@@ -12,82 +12,82 @@ export class FetchAdapter implements HttpClient {
     this.bearerToken = Funifier.shared.getBearerToken();
   }
 
+  prepareHeaders(headers?: HeadersInit): HeadersInit {
+    const token = this.basicToken || this.bearerToken || null;
+
+    const defaultHeaders = new Headers({
+      'Content-Type': 'application/json;charset=UTF-8',
+      ...(token && { Authorization: token }),
+      ...(headers && headers),
+    });
+
+    return Object.fromEntries(defaultHeaders.entries());
+  }
+
   async get<T>(
     url: string,
     options?: HttpClientOptions | undefined,
   ): Promise<T> {
-    try {
-      const { headers, params } = options || {};
-      const urlWithParams = new URL(`${this.baseUrl}${url}`);
-      if (params) {
-        Object.keys(params).forEach(key => {
-          urlWithParams.searchParams.append(key, params[key]);
-        });
-      }
-      return fetch(urlWithParams.toString(), {
-        headers,
-      }).then(response => response.json());
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(error);
-      }
-      throw error;
+    const { headers, params } = options || {};
+    const urlWithParams = new URL(`${this.baseUrl}${url}`);
+    if (params) {
+      Object.keys(params).forEach(key => {
+        urlWithParams.searchParams.append(key, params[key]);
+      });
     }
+    return fetch(urlWithParams.toString(), {
+      headers: this.prepareHeaders(headers),
+    })
+      .then(response => response.json())
+      .catch(error => {
+        throw new Error(error.message);
+      });
   }
 
   async post<T>(
     url: string,
     options?: HttpClientOptions | undefined,
   ): Promise<T> {
-    try {
-      const { headers, data } = options || {};
-      return await fetch(`${this.baseUrl}${url}`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(data),
-      }).then(response => response.json());
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(error);
-      }
-      throw error;
-    }
+    const { headers, data } = options || {};
+    return await fetch(`${this.baseUrl}${url}`, {
+      method: 'POST',
+      headers: this.prepareHeaders(headers),
+      body: JSON.stringify(data),
+    })
+      .then(response => response.json())
+      .catch(error => {
+        throw new Error(error.message);
+      });
   }
 
   async put<T>(
     url: string,
     options?: HttpClientOptions | undefined,
   ): Promise<T> {
-    try {
-      const { headers, data } = options || {};
-      return await fetch(`${this.baseUrl}${url}`, {
-        method: 'PUT',
-        headers,
-        body: JSON.stringify(data),
-      }).then(response => response.json());
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(error);
-      }
-      throw error;
-    }
+    const { headers, data } = options || {};
+    return await fetch(`${this.baseUrl}${url}`, {
+      method: 'PUT',
+      headers: this.prepareHeaders(headers),
+      body: JSON.stringify(data),
+    })
+      .then(response => response.json())
+      .catch(error => {
+        throw new Error(error.message);
+      });
   }
 
-  async delete<T>(
+  async delete(
     url: string,
     options?: HttpClientOptions | undefined,
-  ): Promise<T> {
-    try {
-      const { headers } = options || {};
-      return await fetch(`${this.baseUrl}${url}`, {
-        method: 'DELETE',
-        headers,
-      }).then(response => response.json());
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(error);
-      }
-      throw error;
-    }
+  ): Promise<void> {
+    const { headers } = options || {};
+    await fetch(`${this.baseUrl}${url}`, {
+      method: 'DELETE',
+      headers: this.prepareHeaders(headers),
+    })
+      .then(() => {})
+      .catch(error => {
+        throw new Error(error.message);
+      });
   }
 }
