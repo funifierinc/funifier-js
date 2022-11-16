@@ -7,12 +7,23 @@ import { Token } from '../types/auth/token.type';
 /**
  * Authentication class.
  * It is used to authenticate with the Funifier API.
+ * You need a instance of Funifier to use this class.
+ * @see {@link Funifier}
+ * @example
+ * ```typescript
+ * import { Funifier } from '..';
+ *
+ * Funifier.init({
+ *  api_key: 'your_api_key',
+ *  service: 'https://your_service.funifier.com',
+ * });
+ * ```
  */
-export class Auth {
+class Auth {
   constructor(private readonly httpClient: HttpClient) {}
 
-  static authenticate() {
-    return new Auth(new FetchAdapter());
+  static authenticate(httpClient: HttpClient = new FetchAdapter()): Auth {
+    return new Auth(httpClient);
   }
 
   /**
@@ -21,10 +32,9 @@ export class Auth {
    * @returns The token.
    * @example
    * ```typescript
-   * import { Funifier } from '..';
-   * import { Auth } from './auth';
+   * import { auth } from './auth';
    *
-   * const token = Auth.authenticate({ funifierInstance }).basic({
+   * const token = auth().basic({
    *   client_secret: '456',
    * });
    * ```
@@ -48,11 +58,11 @@ export class Auth {
    * @example
    * ```typescript
    * import { Funifier } from '..';
-   * import { Auth } from './auth';
+   * import { auth } from './auth';
    *
    * const username = 'john.doe';
    * const password = '123456';
-   * const token = await Auth.authenticate({ funifierInstance }).password({ username, password });
+   * const token = await auth().password({ username, password });
    * ```
    * @see {@link Token}
    */
@@ -80,14 +90,16 @@ export class Auth {
       return response;
     }
 
-    if (response && response.message === 'password incorrect for player') {
+    if (response.message === 'password incorrect for player') {
       throw new Error('player or password incorrect');
     }
 
-    if (response && response.message?.includes('api_key invalid')) {
+    if (response.message && response.message.includes('api_key invalid')) {
       throw new Error('api_key invalid');
     }
 
     throw new Error('unknown error');
   }
 }
+
+export const auth = Auth.authenticate;
