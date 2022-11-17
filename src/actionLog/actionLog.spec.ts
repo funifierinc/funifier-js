@@ -40,20 +40,41 @@ describe('ActionLog', () => {
         Promise.resolve({
           _id: '123',
           ...actionLogInput,
+          achievements,
         }),
       );
+
+    const achievements = [
+      {
+        player: 'test',
+        total: 1.0,
+        type: 1,
+        item: 'DyDJWYs',
+        time: 1668718059637,
+        _id: '63769deb20caaf4cb0a9f3e0',
+      },
+      {
+        player: 'test',
+        total: 1.0,
+        type: 1,
+        item: 'DyDJ7G6',
+        time: 1668718059637,
+        _id: '63769deb20caaf4cb0a9f3e1',
+      },
+    ];
 
     const actionLogInput = {
       actionId: '123',
       userId: 'user',
       attributes: { product: 'book', price: 86.5, quantity: 1 },
     };
-    const response = await ActionLog.create(actionLogInput, false);
+    const response = await ActionLog.create(actionLogInput);
     expect(response).toHaveProperty('_id');
     expect(response).toHaveProperty('actionId');
     expect(response).toHaveProperty('userId');
     expect(response).toHaveProperty('attributes');
-    expect(mockedRequest).toHaveBeenCalledWith('/v3/action/log?async=false', {
+    expect(response).toHaveProperty('achievements');
+    expect(mockedRequest).toHaveBeenCalledWith('/v3/action/log', {
       data: actionLogInput,
     });
   });
