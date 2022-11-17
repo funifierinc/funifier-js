@@ -1,6 +1,4 @@
 import { Funifier } from '../funifier';
-import { FetchAdapter } from '../httpClient/fetchAdapter';
-import { HttpClient } from '../httpClient/httpClient';
 import { BasicProps, PasswordProps } from '../types/auth/auth.type';
 import { Token } from '../types/auth/token.type';
 
@@ -11,7 +9,7 @@ import { Token } from '../types/auth/token.type';
  * @see {@link Funifier}
  * @example
  * ```typescript
- * import { Funifier } from '..';
+ * import { Funifier } from 'funifier-js';
  *
  * Funifier.init({
  *  api_key: 'your_api_key',
@@ -20,10 +18,10 @@ import { Token } from '../types/auth/token.type';
  * ```
  */
 class Auth {
-  constructor(private readonly httpClient: HttpClient) {}
+  private constructor() {}
 
-  static authenticate(httpClient: HttpClient = new FetchAdapter()): Auth {
-    return new Auth(httpClient);
+  static init(): Auth {
+    return new Auth();
   }
 
   /**
@@ -74,7 +72,7 @@ class Auth {
       password,
     };
 
-    const response = await this.httpClient.post<Token>(`/v3/auth/token`, {
+    const response = await Funifier.HttpClient.post<Token>(`/v3/auth/token`, {
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
         'Cache-Control': 'no-cache',
@@ -102,4 +100,4 @@ class Auth {
   }
 }
 
-export const auth = Auth.authenticate;
+export const auth = Auth.init();

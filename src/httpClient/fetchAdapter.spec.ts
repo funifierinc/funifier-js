@@ -1,11 +1,8 @@
-import { Funifier } from '../funifier';
 import { FetchAdapter } from './fetchAdapter';
 import { HttpClient } from './httpClient';
 
 describe('FetchAdapter', () => {
-  const service = 'https://url-service.funifier.com';
-  const api_key = 'apiKey';
-  let baseUrl: string;
+  const baseUrl = 'https://url-service.funifier.com';
   let fetchAdapter: HttpClient;
   let fetchMock: jest.SpyInstance;
   const defaultHeaders = {
@@ -13,13 +10,10 @@ describe('FetchAdapter', () => {
   };
 
   beforeEach(() => {
-    Funifier.init({ service, api_key });
-    baseUrl = Funifier.shared.getConfig().service;
-    fetchAdapter = new FetchAdapter();
+    fetchAdapter = new FetchAdapter({ baseUrl });
   });
 
   afterEach(() => {
-    Funifier.destroy();
     jest.clearAllMocks();
     fetchMock.mockClear();
   });
@@ -58,8 +52,7 @@ describe('FetchAdapter', () => {
   });
 
   it('it should have a auth token after user login', async () => {
-    Funifier.shared.setBearerToken('Bearer 123');
-    fetchAdapter = new FetchAdapter();
+    fetchAdapter.setBearerToken('Bearer 123');
     fetchMock = jest.spyOn(global, 'fetch').mockImplementationOnce(
       () =>
         Promise.resolve({

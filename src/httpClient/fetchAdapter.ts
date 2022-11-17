@@ -1,4 +1,4 @@
-import { Funifier, StringBasic, StringBearer } from '../funifier';
+import { StringBasic, StringBearer } from '../funifier';
 import { HttpClient, HttpClientOptions } from './httpClient';
 
 export class FetchAdapter implements HttpClient {
@@ -6,10 +6,15 @@ export class FetchAdapter implements HttpClient {
   private bearerToken: StringBearer | null = null;
   private basicToken: StringBasic | null = null;
 
-  constructor() {
-    this.baseUrl = Funifier.shared.getConfig().service;
-    this.basicToken = Funifier.shared.getBasicToken();
-    this.bearerToken = Funifier.shared.getBearerToken();
+  constructor({ baseUrl }: { baseUrl: string }) {
+    this.baseUrl = baseUrl;
+  }
+
+  setBearerToken(token: StringBearer): void {
+    this.bearerToken = token;
+  }
+  setBasicToken(token: StringBasic): void {
+    this.basicToken = token;
   }
 
   prepareHeaders(headers?: HeadersInit): HeadersInit {

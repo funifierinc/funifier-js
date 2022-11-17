@@ -1,3 +1,5 @@
+import { StringBearer, StringBasic } from '../funifier';
+
 export type HttpClientOptions = {
   headers?: Record<string, string>;
   params?: Record<string, string>;
@@ -9,4 +11,6 @@ export interface HttpClient {
   post<T>(url: string, options?: HttpClientOptions): Promise<T>;
   put<T>(url: string, options?: HttpClientOptions): Promise<T>;
   delete(url: string, options?: HttpClientOptions): Promise<void>;
+  setBearerToken(token: StringBearer): void;
+  setBasicToken(token: StringBasic): void;
 }
