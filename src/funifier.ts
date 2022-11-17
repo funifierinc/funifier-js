@@ -1,3 +1,6 @@
+import { FetchAdapter } from './httpClient/fetchAdapter';
+import { HttpClient } from './httpClient/httpClient';
+
 type ConfigProps = {
   /**
    * The url of the server to connect to.
@@ -18,6 +21,8 @@ export type StringBearer = `Bearer ${string}`;
  * The Funifier class is the main class of the SDK.
  * It is used to create an instance of the SDK and to set the configuration.
  * @example
+ * import { Funifier } from 'funifier-js';
+ *
  * const funifierInstance = Funifier.init({
  *  service: "https://service2.funifier.com",
  *  api_key: "636d164af1c2641b440dfde9"
@@ -30,10 +35,12 @@ export class Funifier {
   private api_key: string;
   private bearerToken: StringBearer | null = null;
   private basicToken: StringBasic | null = null;
+  private static httpClient: HttpClient | null = null;
 
   private constructor({ service, api_key }: ConfigProps) {
     this.service = service;
     this.api_key = api_key;
+    Funifier.httpClient = new FetchAdapter({ baseUrl: service });
   }
 
   /**
@@ -41,6 +48,8 @@ export class Funifier {
    * @returns The funifier instance.
    * @example
    * ```typescript
+   * import { Funifier } from 'funifier-js';
+   *
    * const funifierInstance = Funifier.init({
    * service: "https://service2.funifier.com",
    * api_key: "636d164af1c2641b440dfde9"
@@ -92,6 +101,14 @@ export class Funifier {
     return Funifier.INSTANCE;
   }
 
+  public static get HttpClient() {
+    if (!Funifier.httpClient) {
+      throw new Error('Funifier is not initialized');
+    }
+
+    return Funifier.httpClient;
+  }
+
   /**
    * Get configuration object.
    * @returns The configuration object.
@@ -116,6 +133,9 @@ export class Funifier {
       throw new Error('Invalid Bearer token');
     }
     this.bearerToken = token as StringBearer;
+    if (Funifier.httpClient) {
+      Funifier.httpClient.setBearerToken(token as StringBearer);
+    }
   }
 
   /**
@@ -139,6 +159,9 @@ export class Funifier {
       throw new Error('Invalid Basic token');
     }
     this.basicToken = token as StringBasic;
+    if (Funifier.httpClient) {
+      Funifier.httpClient.setBasicToken(token as StringBasic);
+    }
   }
 
   /**
