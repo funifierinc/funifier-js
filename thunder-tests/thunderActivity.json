@@ -1,0 +1,83 @@
+[
+  {
+    "_id": "2dfa0115-062d-4d3b-a5e5-9d19f325f630",
+    "colId": "history",
+    "containerId": "",
+    "name": "https://service2.funifier.com/v3/action/log",
+    "url": "https://service2.funifier.com/v3/action/log",
+    "method": "GET",
+    "sortNum": 0,
+    "created": "2022-11-17T19:58:38.235Z",
+    "modified": "2022-11-17T19:58:38.759Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"actionId\": \"sell\",\n  \"userId\": \"test\",\n  \"time\": 1668715041192,\n  \"attributes\": {},\n  \"_id\": \"6376922120caaf4cb0a9f182\"\n}",
+      "form": []
+    },
+    "auth": {
+      "type": "bearer",
+      "bearer": "eyJhbGciOiJIUzUxMiIsImNhbGciOiJHWklQIn0.H4sIAAAAAAAAAD2LuwoCMRAAf0VSX5Hk9jaJpa1ytVaySTZwcHhvVMR_d1GwG4aZl6KxO_JT7RXWDn1JwepEVCBFTaFoAlWpJQ0jSzIz5Sv1fbW7z93KP8zc859ppUgLy0MpDdttletwnk7tpRW3LTyLaMCVxiI4453GiGBzbnRNUnQkh0H0zgCArRQ_xq8ItQkW7PsD7hl_XbEAAAA.yCp2bcrMs6F3R7fkSjzNXH2dbVdw4Xnf3Sk-mlVDmij_gtv3jIsZ58DNBGDiWuf4JlsMSKILDcUJjj6z8CPxRA"
+    },
+    "tests": []
+  },
+  {
+    "_id": "60635b83-b32d-447d-82f3-117a68d115ab",
+    "colId": "history",
+    "containerId": "",
+    "name": "https://service2.funifier.com/v3/action/log?async=false",
+    "url": "https://service2.funifier.com/v3/action/log?async=false",
+    "method": "GET",
+    "sortNum": 0,
+    "created": "2022-11-17T19:58:55.690Z",
+    "modified": "2022-11-17T20:07:24.909Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "async",
+        "value": "false",
+        "isPath": false
+      }
+    ],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"actionId\": \"sell\",\n  \"userId\": \"test\",\n  \"attributes\": {\n    \"product\": \"boot\",\n    \"price\": 1,\n    \"quantity\": 1\n  }\n}",
+      "form": []
+    },
+    "auth": {
+      "type": "bearer",
+      "bearer": "eyJhbGciOiJIUzUxMiIsImNhbGciOiJHWklQIn0.H4sIAAAAAAAAAD2LuwoCMRAAf0VSX5Hk9jaJpa1ytVaySTZwcHhvVMR_d1GwG4aZl6KxO_JT7RXWDn1JwepEVCBFTaFoAlWpJQ0jSzIz5Sv1fbW7z93KP8zc859ppUgLy0MpDdttletwnk7tpRW3LTyLaMCVxiI4453GiGBzbnRNUnQkh0H0zgCArRQ_xq8ItQkW7PsD7hl_XbEAAAA.yCp2bcrMs6F3R7fkSjzNXH2dbVdw4Xnf3Sk-mlVDmij_gtv3jIsZ58DNBGDiWuf4JlsMSKILDcUJjj6z8CPxRA"
+    },
+    "tests": []
+  },
+  {
+    "_id": "4cf13578-a1b0-446f-b8cf-763972f59322",
+    "colId": "history",
+    "containerId": "",
+    "name": "https://service2.funifier.com/v3/action/log?async=false",
+    "url": "https://service2.funifier.com/v3/action/log?async=false",
+    "method": "POST",
+    "sortNum": 0,
+    "created": "2022-11-17T20:07:34.706Z",
+    "modified": "2022-11-17T20:47:39.702Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "async",
+        "value": "false",
+        "isPath": false
+      }
+    ],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"actionId\": \"sell\",\n  \"userId\": \"test\",\n  \"attributes\": {\n    \"product\": \"boot\",\n    \"price\": 1,\n    \"quantity\": 11\n  }\n}",
+      "form": []
+    },
+    "auth": {
+      "type": "bearer",
+      "bearer": "eyJhbGciOiJIUzUxMiIsImNhbGciOiJHWklQIn0.H4sIAAAAAAAAAD2LuwoCMRAAf0VSX5Hk9jaJpa1ytVaySTZwcHhvVMR_d1GwG4aZl6KxO_JT7RXWDn1JwepEVCBFTaFoAlWpJQ0jSzIz5Sv1fbW7z93KP8zc859ppUgLy0MpDdttletwnk7tpRW3LTyLaMCVxiI4453GiGBzbnRNUnQkh0H0zgCArRQ_xq8ItQkW7PsD7hl_XbEAAAA.yCp2bcrMs6F3R7fkSjzNXH2dbVdw4Xnf3Sk-mlVDmij_gtv3jIsZ58DNBGDiWuf4JlsMSKILDcUJjj6z8CPxRA"
+    },
+    "tests": []
+  }
+]
