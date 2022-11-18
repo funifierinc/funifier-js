@@ -5,9 +5,22 @@ import { Token } from '../types/auth/token.type';
 /**
  * Authentication class.
  * It is used to authenticate with the Funifier API.
+ * You need a instance of Funifier to use this class.
+ * @see {@link Funifier}
+ * @example
+ * ```typescript
+ * import { Funifier } from 'funifier-js';
+ *
+ * Funifier.init({
+ *  api_key: 'your_api_key',
+ *  service: 'https://your_service.funifier.com',
+ * });
+ * ```
  */
-export class Auth {
-  static authenticate() {
+class Auth {
+  private constructor() {}
+
+  static init(): Auth {
     return new Auth();
   }
 
@@ -17,10 +30,9 @@ export class Auth {
    * @returns The token.
    * @example
    * ```typescript
-   * import { Funifier } from '..';
-   * import { Auth } from './auth';
+   * import { auth } from './auth';
    *
-   * const token = Auth.authenticate({ funifierInstance }).basic({
+   * const token = auth().basic({
    *   client_secret: '456',
    * });
    * ```
@@ -44,11 +56,11 @@ export class Auth {
    * @example
    * ```typescript
    * import { Funifier } from '..';
-   * import { Auth } from './auth';
+   * import { auth } from './auth';
    *
    * const username = 'john.doe';
    * const password = '123456';
-   * const token = await Auth.authenticate({ funifierInstance }).password({ username, password });
+   * const token = await auth().password({ username, password });
    * ```
    * @see {@link Token}
    */
@@ -60,39 +72,32 @@ export class Auth {
       password,
     };
 
-    const response = await fetch(
-      `${Funifier.shared.getConfig().service}/v3/auth/token`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-          'Cache-Control': 'no-cache',
-        },
-        body: JSON.stringify(payload),
+    const response = await Funifier.HttpClient.post<Token>(`/v3/auth/token`, {
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Cache-Control': 'no-cache',
       },
-    );
+      data: payload,
+    });
 
-    const responseParsed = await response.json();
-
-    if (responseParsed.access_token) {
-      const bearerToken = `Bearer ${responseParsed.access_token}`;
+    if (response.access_token) {
+      const bearerToken = `Bearer ${response.access_token}`;
 
       Funifier.shared.setBearerToken(bearerToken);
 
-      return responseParsed as Token;
+      return response;
     }
 
-    if (
-      responseParsed &&
-      responseParsed.message === 'password incorrect for player'
-    ) {
+    if (response.message === 'password incorrect for player') {
       throw new Error('player or password incorrect');
     }
 
-    if (responseParsed && responseParsed.message.includes('api_key invalid')) {
+    if (response.message && response.message.includes('api_key invalid')) {
       throw new Error('api_key invalid');
     }
 
     throw new Error('unknown error');
   }
 }
+
+export const auth = Auth.init();

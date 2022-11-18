@@ -1,5 +1,5 @@
 import { Funifier } from '../funifier';
-import { Auth } from './auth';
+import { auth } from './auth';
 
 describe('Auth', () => {
   const service = 'https://url-service.funifier.com';
@@ -25,13 +25,13 @@ describe('Auth', () => {
     it('should throw an error if funifierInstance is not provided', () => {
       Funifier.destroy();
 
-      expect(() =>
-        Auth.authenticate().basic({ client_secret: 'secret' }),
-      ).toThrow(new Error('Funifier is not initialized'));
+      expect(() => auth.basic({ client_secret: 'secret' })).toThrow(
+        new Error('Funifier is not initialized'),
+      );
     });
 
     it('should authenticate with a basic authentication method', () => {
-      const token = Auth.authenticate().basic({
+      const token = auth.basic({
         client_secret: '456',
       });
 
@@ -39,7 +39,7 @@ describe('Auth', () => {
     });
 
     it('should set the basic token in the funifier instance', () => {
-      const token = Auth.authenticate().basic({
+      const token = auth.basic({
         client_secret: '456',
       });
 
@@ -57,7 +57,7 @@ describe('Auth', () => {
         expires_in: 123412341234,
       });
 
-      const token = await Auth.authenticate().password({
+      const token = await auth.password({
         username,
         password,
       });
@@ -75,7 +75,7 @@ describe('Auth', () => {
       });
 
       try {
-        await Auth.authenticate().password({
+        await auth.password({
           username: '-null-',
           password: '-null-',
         });
@@ -91,7 +91,7 @@ describe('Auth', () => {
         expires_in: 123412341234,
       });
 
-      const token = await Auth.authenticate().password({
+      const token = await auth.password({
         username,
         password,
       });
@@ -113,7 +113,7 @@ describe('Auth', () => {
       });
 
       try {
-        await Auth.authenticate().password({
+        await auth.password({
           username,
           password,
         });
@@ -130,7 +130,7 @@ describe('Auth', () => {
       });
 
       try {
-        await Auth.authenticate().password({
+        await auth.password({
           username,
           password,
         });

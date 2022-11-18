@@ -7,6 +7,12 @@ describe('Funifier', () => {
     }).toThrow(new Error('Funifier is not initialized'));
   });
 
+  it('should throw an error if try to call Funifier.HttpClient without a Funifier instance', () => {
+    expect(() => Funifier.HttpClient).toThrowError(
+      'Funifier is not initialized',
+    );
+  });
+
   it('should create a new instance of Funifier', () => {
     const funifier = Funifier.init({
       service: 'test',

@@ -65,7 +65,9 @@
   },
   "release": {
     "branches": [
-      "main"
+      "main",
+      "alpha",
+      "beta"
     ]
   }
 }
